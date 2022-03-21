@@ -21,6 +21,14 @@
     </style>
   </head>
   <body>
+    <div>
+      <div id="message">Press Start Button</div>
+      <div id="start">
+        <button id="btnstart" type="button" onclick="Start()" class="btn">
+          Start Game
+        </button>
+      </div>
+    </div>
     <div id="output"></div>
     <script>
       var cards = [];
@@ -65,21 +73,33 @@
           cards.push(card);
         }
       }
-      var randomNum = Math.floor(Math.random() * 52);
-      output.innerHTML = cards[randomNum].icon;
+      // var randomNum = Math.floor(Math.random() * 52); // they were causing an extra acrd type to appear.
+      // output.innerHTML = cards[randomNum].icon;
 
-      function ranCard() {
-        var randomNum = Math.floor(Math.random() * 52);
+      function Start() {
+        outputCard();
+        shuffleDeck(cards);
+        outputCard();
+      }
+      function shuffleDeck(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+        }
+        return array;
+      }
+      function outputCard() {
         output.innerHTML +=
           "<span style='color:" +
-          cards[randomNum].bgcolor +
+          cards[0].bgcolor +
           "'>&" +
-          cards[randomNum].icon +
+          cards[0].icon +
           ";" +
-          cards[randomNum].cardnum +
+          cards[0].cardnum +
           "</span>  ";
       }
-      ranCard();
     </script>
   </body>
 </html>
