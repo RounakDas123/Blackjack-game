@@ -10,6 +10,38 @@
       #output {
         font-size: 1.5em;
       }
+      .icard {
+        height: 160px;
+        width: 120px;
+        padding: 3px;
+        border: 1px solid black;
+        background-color: white;
+        border-radius: 10px;
+        position: absolute;
+        left: 100px;
+        display: inline-block;
+      }
+      .top-card {
+        font-size: 30px;
+        line-height: 20px;
+        left: 2px;
+        top: 2px;
+      }
+      .content-card {
+        text-align: center;
+        font-size: 70px;
+      }
+      .bottom-card {
+        font-size: 30px;
+        line-height: 20px;
+        right: 2px;
+        bottom: 2px;
+        transform: rotate(-180deg);
+        -webkit-transform: rotate(-180deg);
+        -moz-transform: rotate(-180deg);
+        -ms-transform: rotate(-180deg);
+        -o-transform: rotate(-180deg);
+      }
       .clubs,
       .spades {
         color: black;
@@ -17,6 +49,18 @@
       .hearts,
       .diams {
         color: red;
+      }
+      .hearts .suit::after {
+        content: "\2665";
+      }
+      .diams .suit::after {
+        content: "\2665";
+      }
+      .spades .suit::after {
+        content: "\2660";
+      }
+      .clubs .suit::after {
+        content: "\2663";
       }
     </style>
   </head>
@@ -29,9 +73,19 @@
         </button>
       </div>
     </div>
-    <div id="output"></div>
+    <div id="output">
+      Dealer hand:
+      <div id="dealerHolder"></div>
+      Player hand:
+      <div id="playerHolder"></div>
+    </div>
+
     <script>
       var cards = [];
+      var playerCard = [];
+      var dealerCard = [];
+      var cardCount = 0;
+
       var suits = ["spades", "hearts", "clubs", "diams"];
       var numb = [
         "A",
@@ -49,6 +103,8 @@
         "K",
       ];
       var output = document.getElementById("output");
+      var dealerholder = document.getElementById("dealerHolder");
+      var playerholder = document.getElementById("playerHolder");
       for (s in suits) {
         var suit = suits[s][0].toUpperCase();
         var bgcolor = suit == "S" || suit == "C" ? "black" : "red";
@@ -77,10 +133,37 @@
       // output.innerHTML = cards[randomNum].icon;
 
       function Start() {
-        outputCard();
         shuffleDeck(cards);
-        outputCard();
+        dealNew();
+        //outputCard();
       }
+
+      function dealNew() {
+        playerCard = [];
+        dealerCard = [];
+        dealerholder.innerHTML = "";
+        playerholder.innerHTML = "";
+        for (x = 0; x < 2; x++) {
+          dealerCard.push(cards[cardCount]);
+          dealerholder.innerHTML += cardOutput(cardCount);
+          cardCount++;
+          playerCard.push(cards[cardCount]);
+          playerholder.innerHTML += cardOutput(cardCount);
+          cardCount++;
+        }
+      }
+      function cardOutput(n) {
+        return (
+          '<div class="icard ' +
+          cards[n].icon +
+          '"><div class="top-card suit">' +
+          cards[n].icon +
+          '<br /></div><div class="content-card suit">&spades;</div><div class="bottom-card suit">' +
+          cards[n].icon +
+          "<br /></div></div>"
+        );
+      }
+
       function shuffleDeck(array) {
         for (var i = array.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
@@ -93,11 +176,11 @@
       function outputCard() {
         output.innerHTML +=
           "<span style='color:" +
-          cards[0].bgcolor +
+          cards[cardCount].bgcolor +
           "'>&" +
-          cards[0].icon +
+          cards[cardCount].icon +
           ";" +
-          cards[0].cardnum +
+          cards[cardCount].cardnum +
           "</span>  ";
       }
     </script>
