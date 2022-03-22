@@ -10,6 +10,15 @@
       #output {
         font-size: 1.5em;
       }
+      #cover {
+        height: 160px;
+        width: 120px;
+        background-color: brown;
+        border-radius: 10px;
+        position: absolute;
+        border-radius: 10px;
+        padding: 3px;
+      }
       .icard {
         height: 160px;
         width: 120px;
@@ -62,10 +71,32 @@
       .clubs .suit::after {
         content: "\2663";
       }
+      #dealerHolder,
+      #playerHolder {
+        height: 180px;
+        width: 500px;
+      }
     </style>
   </head>
   <body>
     <div>
+      <div>
+        <h1>BlackJack Game</h1>
+        <small>Reach to 21 or higher than the dealer</small>
+        <div class="total">Total $<span id="dollars">100</span></div>
+        <div>
+          Bet Amount $<input
+            type="number"
+            id="mybet"
+            value="0"
+            min="1"
+            max="100"
+          />
+          <button id="maxbet" type="button" onclick="maxbet()" class="btn">
+            Max Bet
+          </button>
+        </div>
+      </div>
       <div id="message">Press Start Button</div>
       <div id="start">
         <button id="btnstart" type="button" onclick="Start()" class="btn">
@@ -74,10 +105,41 @@
       </div>
     </div>
     <div id="output">
-      Dealer hand:
+      Dealer hand: <span id="dValue"></span>
       <div id="dealerHolder"></div>
-      Player hand:
+      Player hand: <span id="pValue"></span>
       <div id="playerHolder"></div>
+      <div id="myactions">
+        <button
+          id="btnhold"
+          type="button"
+          onclick="cardAction('hold')"
+          class="btn"
+        >
+          Hold
+        </button>
+        <button
+          id="btnhit"
+          type="button"
+          onclick="cardAction('hit')"
+          class="btn"
+        >
+          Hit
+        </button>
+        <button
+          id="btndouble"
+          type="button"
+          onclick="cardAction('double')"
+          class="btn"
+        >
+          Double
+        </button>
+      </div>
+      <div>
+        <button id="btndeal" type="button" onclick="dealNew()" class="btn">
+          Deal
+        </button>
+      </div>
     </div>
 
     <script>
@@ -134,7 +196,7 @@
 
       function Start() {
         shuffleDeck(cards);
-        dealNew();
+        //dealNew();
         //outputCard();
       }
 
@@ -145,22 +207,29 @@
         playerholder.innerHTML = "";
         for (x = 0; x < 2; x++) {
           dealerCard.push(cards[cardCount]);
-          dealerholder.innerHTML += cardOutput(cardCount);
+          dealerholder.innerHTML += cardOutput(cardCount, x);
+          if (x == 0) {
+            dealerholder.innerHTML +=
+              '<div id="cover" style = "left:100px;"></div> ';
+          }
           cardCount++;
           playerCard.push(cards[cardCount]);
-          playerholder.innerHTML += cardOutput(cardCount);
+          playerholder.innerHTML += cardOutput(cardCount, x);
           cardCount++;
         }
       }
-      function cardOutput(n) {
+      function cardOutput(n, x) {
+        var hpos = x > 0 ? x * 60 + 100 : 100;
         return (
           '<div class="icard ' +
           cards[n].icon +
-          '"><div class="top-card suit">' +
-          cards[n].icon +
-          '<br /></div><div class="content-card suit">&spades;</div><div class="bottom-card suit">' +
-          cards[n].icon +
-          "<br /></div></div>"
+          '" style="left:' +
+          hpos +
+          'px;">  <div class="top-card suit">' +
+          cards[n].cardnum +
+          '<br></div>  <div class="content-card suit"></div>  <div class="bottom-card suit">' +
+          cards[n].cardnum +
+          "<br></div> </div>"
         );
       }
 
